@@ -1,7 +1,7 @@
-use std::{fs, env};
-use std::path::PathBuf;
-use anyhow::{Context, Result};
 use crate::bse::http::BasisSetExchange;
+use anyhow::{Context, Result};
+use std::path::PathBuf;
+use std::{env, fs};
 
 pub const ATO_ENV_VAR: &str = "ATO_DATA_PATH";
 pub const DEFAULT_DATA_PATH: &str = ".ato_rs/data/";

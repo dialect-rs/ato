@@ -1,14 +1,16 @@
 use crate::bse::basisset_json::InputData;
 use crate::bse::metadata_json::InputMetaData;
+use crate::files::{
+    data_path, ensure_data_exist, BASIS_SUBDIRECTORY, BINCODE_BASIS_DICT, JSON_BASIS_DICT,
+};
 use anyhow::{Context, Result};
 use bincode::serialize_into;
-use reqwest::{Client};
-use std::collections::{BTreeMap};
+use futures::stream::StreamExt;
+use reqwest::Client;
+use std::collections::BTreeMap;
+use std::fs;
 use std::fs::File;
 use std::io::BufWriter;
-use std::fs;
-use futures::stream::StreamExt;
-use crate::files::{data_path, BASIS_SUBDIRECTORY, JSON_BASIS_DICT, BINCODE_BASIS_DICT, ensure_data_exist};
 
 pub const BSE_BASE_URL: &str = "https://www.basissetexchange.org/";
 pub const BSE_BASIS_SUFFIX: &str = "/format/json/?";
@@ -19,8 +21,10 @@ pub struct BasisSetExchange {}
 
 impl BasisSetExchange {
     async fn request_names() -> Result<BTreeMap<String, String>> {
-        let resp = reqwest::get(format!("{}{}", BSE_BASE_URL, BSE_METADATA)).await?
-            .json::<BTreeMap<String, InputMetaData>>().await?;
+        let resp = reqwest::get(format!("{}{}", BSE_BASE_URL, BSE_METADATA))
+            .await?
+            .json::<BTreeMap<String, InputMetaData>>()
+            .await?;
         Ok(resp
             .keys()
             .zip(resp.values())
@@ -31,34 +35,36 @@ impl BasisSetExchange {
     async fn basis_set_urls() -> Result<Vec<(String, String)>> {
         let names = BasisSetExchange::request_names().await?;
         let path = data_path(BASIS_SUBDIRECTORY)?;
-        Ok(names.values().map(|name| (format!(
-            "{}{}{}{}",
-            BSE_BASE_URL, BSE_BASIS, &name, BSE_BASIS_SUFFIX),
-                                      format!("{}{}.json", &path.to_str().unwrap(), name))
-        ).collect::<Vec<(String, String)>>())
+        Ok(names
+            .values()
+            .map(|name| {
+                (
+                    format!("{}{}{}{}", BSE_BASE_URL, BSE_BASIS, &name, BSE_BASIS_SUFFIX),
+                    format!("{}{}.json", &path.to_str().unwrap(), name),
+                )
+            })
+            .collect::<Vec<(String, String)>>())
     }
 
     pub async fn download_basis_sets() -> Result<()> {
         let paths: Vec<(String, String)> = BasisSetExchange::basis_set_urls().await?;
         let client = Client::builder().build()?;
-        let fetches = futures::stream::iter(
-            paths.into_iter().map(|(url, path)| {
-                let send_fut = client.get(&url).send();
-                async move {
-                    match send_fut.await {
-                        Ok(resp) => {
-                            match resp.bytes().await {
-                                Ok(bytes) => {
-                                    fs::write(&path, bytes).unwrap();
-                                }
-                                Err(_) => println!("ERROR reading {}", url),
-                            }
+        let fetches = futures::stream::iter(paths.into_iter().map(|(url, path)| {
+            let send_fut = client.get(&url).send();
+            async move {
+                match send_fut.await {
+                    Ok(resp) => match resp.bytes().await {
+                        Ok(bytes) => {
+                            fs::write(&path, bytes).unwrap();
                         }
-                        Err(_) => println!("ERROR downloading {}", url),
-                    }
+                        Err(_) => println!("ERROR reading {}", url),
+                    },
+                    Err(_) => println!("ERROR downloading {}", url),
                 }
-            })
-        ).buffer_unordered(30).collect::<Vec<()>>();
+            }
+        }))
+        .buffer_unordered(30)
+        .collect::<Vec<()>>();
         fetches.await;
         Ok(())
     }
@@ -92,4 +98,3 @@ impl BasisSetExchange {
         Ok(result)
     }
 }
-

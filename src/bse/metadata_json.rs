@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap};
+use std::collections::BTreeMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct InputMetaData {

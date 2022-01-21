@@ -1,10 +1,9 @@
-use std::collections::HashMap;
-use crate::bse::http::BasisSetExchange;
-use crate::elements::Element;
-use crate::bse::basisset_json::*;
 use crate::angular_momentum::AngularMomentum;
 use crate::basis_function::BasisFunction;
-
+use crate::bse::basisset_json::*;
+use crate::bse::http::BasisSetExchange;
+use crate::elements::Element;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
 pub struct BasisSet {
@@ -13,13 +12,11 @@ pub struct BasisSet {
     pub basis_functions: HashMap<Element, Vec<BasisFunction>>,
 }
 
-
 impl From<InputData> for BasisSet {
     fn from(data: InputData) -> Self {
         // The HashMap is initialized.
         let mut bfs: HashMap<Element, Vec<BasisFunction>> = HashMap::new();
         for (element, shells) in data.elements.iter() {
-
             // The corresponding Element is created.
             let el: Element = Element::from(*element as u8);
 
@@ -39,7 +36,6 @@ impl From<InputData> for BasisSet {
 
             // Iteration over all angular momenta.
             for (l, c) in shell.angular_momentum.iter().zip(shell.coefficients.iter()) {
-
                 // The coefficients are converted to floats.
                 let coefficients: Vec<f64> = c.iter().map(|x| x.parse::<f64>().unwrap()).collect();
 
@@ -61,7 +57,6 @@ impl From<InputData> for BasisSet {
     }
 }
 
-
 impl From<&str> for BasisSet {
     fn from(name: &str) -> Self {
         let data = BasisSetExchange::read_basis(name).unwrap();
@@ -70,7 +65,6 @@ impl From<&str> for BasisSet {
 }
 
 impl BasisSet {
-
     /// Create a basis set.
     ///
     /// The names are identical to the ones listed at
