@@ -1,11 +1,7 @@
+mod bse;
+mod files;
+pub mod basis_set;
+mod elements;
 mod angular_momentum;
 mod basis_function;
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
-    }
-}
