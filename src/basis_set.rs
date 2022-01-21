@@ -1,8 +1,5 @@
 use std::collections::HashMap;
-use std::env;
-use std::path::Path;
 use crate::bse::http::BasisSetExchange;
-use anyhow::{Result, Context};
 use crate::elements::Element;
 use crate::bse::basisset_json::*;
 use crate::angular_momentum::AngularMomentum;
@@ -11,9 +8,9 @@ use crate::basis_function::BasisFunction;
 
 #[derive(Debug, Clone)]
 pub struct BasisSet {
-    name: String,
-    description: String,
-    basis_functions: HashMap<Element, Vec<BasisFunction>>,
+    pub name: String,
+    pub description: String,
+    pub basis_functions: HashMap<Element, Vec<BasisFunction>>,
 }
 
 

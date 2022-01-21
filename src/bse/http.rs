@@ -2,12 +2,11 @@ use crate::bse::basisset_json::InputData;
 use crate::bse::metadata_json::InputMetaData;
 use anyhow::{Context, Result};
 use bincode::serialize_into;
-use reqwest::{Url, Client};
-use std::collections::{BTreeMap, HashMap};
+use reqwest::{Client};
+use std::collections::{BTreeMap};
 use std::fs::File;
 use std::io::BufWriter;
-use std::path::{Path, PathBuf};
-use std::{env, fs};
+use std::fs;
 use futures::stream::StreamExt;
 use crate::files::{data_path, BASIS_SUBDIRECTORY, JSON_BASIS_DICT, BINCODE_BASIS_DICT, ensure_data_exist};
 
@@ -68,8 +67,8 @@ impl BasisSetExchange {
         let names = BasisSetExchange::request_names().await?;
         let json_path = data_path(JSON_BASIS_DICT)?;
         let bincode_path = data_path(BINCODE_BASIS_DICT)?;
-        let mut f = BufWriter::new(File::create(&json_path).unwrap());
-        serde_json::to_writer(f, &names);
+        let f = BufWriter::new(File::create(&json_path).unwrap());
+        serde_json::to_writer(f, &names)?;
         let mut f = BufWriter::new(File::create(&bincode_path).unwrap());
         serialize_into(&mut f, &names)?;
         Ok(())
@@ -78,7 +77,7 @@ impl BasisSetExchange {
     fn read_names() -> Result<BTreeMap<String, String>> {
         let path = data_path(BINCODE_BASIS_DICT)?;
         let data = fs::read(&path).context("Unable to read file")?;
-        Ok(bincode::deserialize(&data).context("Could not deserialize basis set names")?)
+        bincode::deserialize(&data).context("Could not deserialize basis set names")
     }
 
     pub fn read_basis(name: &str) -> Result<InputData> {

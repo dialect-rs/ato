@@ -4,7 +4,6 @@ use anyhow::{Context, Result};
 use crate::bse::http::BasisSetExchange;
 
 pub const ATO_ENV_VAR: &str = "ATO_DATA_PATH";
-pub const DEFAULT_PATH: &str = ".ato_rs/";
 pub const DEFAULT_DATA_PATH: &str = ".ato_rs/data/";
 pub const BASIS_SUBDIRECTORY: &str = "basis_sets/";
 pub const BINCODE_BASIS_DICT: &str = "basis_set_dict.bc";
