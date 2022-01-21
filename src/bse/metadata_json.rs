@@ -25,9 +25,14 @@ struct InputVersions {
     revdesc: String,
 }
 
-#[test]
-fn test_metadata() {
-    let metadata_string = r#"
+#[cfg(test)]
+mod tests {
+    use crate::bse::metadata_json::InputMetaData;
+    use serde_json::from_str;
+
+    #[test]
+    fn test_metadata() {
+        let metadata_string = r#"
     {
       "auxiliaries":{},
       "basename":"STO-2G",
@@ -60,9 +65,11 @@ fn test_metadata() {
          }
       }
    }"#;
-    let data: InputMetaData = from_str(&metadata_string).unwrap();
-    assert_eq!(&data.basename, "STO-2G");
-    assert_eq!(&data.description, "STO-2G Minimal Basis (2 functions/AO)");
-    assert_eq!(&data.display_name, "STO-2G");
-    assert_eq!(data.notes_exist, vec![true, true]);
+        let data: InputMetaData = from_str(&metadata_string).unwrap();
+        assert_eq!(&data.basename, "STO-2G");
+        assert_eq!(&data.description, "STO-2G Minimal Basis (2 functions/AO)");
+        assert_eq!(&data.display_name, "STO-2G");
+        assert_eq!(data.notes_exist, vec![true, true]);
+    }
+
 }

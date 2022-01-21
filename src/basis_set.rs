@@ -105,7 +105,5 @@ impl BasisSet {
 
 #[test]
 fn test_sto3g() {
-    let basis = BasisSet::sto3g();
-    println!("{:?}", basis);
-    assert_eq!(1, 2);
+    BasisSet::sto3g();
 }
