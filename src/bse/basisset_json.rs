@@ -77,7 +77,7 @@ mod tests {
             "auxiliaries": {},
             "name": "STO-2G"
         }"#;
-        let data: InputData = from_str(&sto2g_string).unwrap();
+        let data: InputData = from_str(sto2g_string).unwrap();
         assert_eq!(data.version, 1.to_string());
         assert_eq!(data.family, "sto".to_string());
         assert_eq!(data.role, "orbital".to_string());

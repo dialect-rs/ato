@@ -65,7 +65,7 @@ mod tests {
          }
       }
    }"#;
-        let data: InputMetaData = from_str(&metadata_string).unwrap();
+        let data: InputMetaData = from_str(metadata_string).unwrap();
         assert_eq!(&data.basename, "STO-2G");
         assert_eq!(&data.description, "STO-2G Minimal Basis (2 functions/AO)");
         assert_eq!(&data.display_name, "STO-2G");
