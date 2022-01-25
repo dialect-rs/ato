@@ -4,6 +4,7 @@ use crate::bse::basisset_json::*;
 use crate::bse::http::BasisSetExchange;
 use crate::elements::Element;
 use std::collections::HashMap;
+use std::convert::TryFrom;
 
 #[derive(Debug, Clone)]
 pub struct BasisSet {
@@ -41,7 +42,7 @@ impl From<InputData> for BasisSet {
 
                 // Add the new BasisFunction
                 functions.push(BasisFunction {
-                    l: AngularMomentum::from(*l),
+                    l: AngularMomentum::try_from(*l as u8).unwrap(),
                     exponents: exponents.clone(),
                     coefficients,
                 });

@@ -1,6 +1,17 @@
 use std::fmt;
+use num_enum::TryFromPrimitive;
 
-#[derive(Debug, Copy, Clone)]
+
+/// Representation of the orbital angular momentum or the azimuthal quantum number.
+/// The angular momentum can be created from the primitive value:
+///
+/// ```
+///  use ato::angular_momentum::AngularMomentum;
+///  let one = AngularMomentum::try_from(0u8);
+///  assert_eq!(one, Ok(AngularMomentum::S));
+/// ```
+#[derive(Debug, Clone, Copy, Eq, PartialEq, TryFromPrimitive)]
+#[repr(u8)]
 pub enum AngularMomentum {
     S = 0,
     P = 1,
@@ -31,26 +42,5 @@ impl fmt::Display for AngularMomentum {
             AngularMomentum::M => "m",
         };
         write!(f, "{}", symbol)
-    }
-}
-
-impl From<usize> for AngularMomentum {
-    fn from(value: usize) -> Self {
-        match value {
-            0 => Self::S,
-            1 => Self::P,
-            2 => Self::D,
-            3 => Self::F,
-            4 => Self::G,
-            5 => Self::H,
-            6 => Self::I,
-            7 => Self::J,
-            8 => Self::K,
-            9 => Self::L,
-            10 => Self::M,
-            a => {
-                panic!("Angular momentum:{} is not implemented", a)
-            }
-        }
     }
 }
