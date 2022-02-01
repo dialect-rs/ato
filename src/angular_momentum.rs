@@ -26,6 +26,12 @@ pub enum AngularMomentum {
     M = 10,
 }
 
+impl Hash for AngularMomentum {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        (self as u8).hash(state);
+    }
+}
+
 impl fmt::Display for AngularMomentum {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let symbol: &str = match self {
