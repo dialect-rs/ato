@@ -1,5 +1,6 @@
 use std::fmt;
 use num_enum::TryFromPrimitive;
+use std::hash::{Hash, Hasher};
 
 
 /// Representation of the orbital angular momentum or the azimuthal quantum number.
