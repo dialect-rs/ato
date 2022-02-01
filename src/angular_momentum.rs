@@ -29,7 +29,7 @@ pub enum AngularMomentum {
 
 impl Hash for AngularMomentum {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        (self as u8).hash(state);
+        (*self as u8).hash(state);
     }
 }
 
