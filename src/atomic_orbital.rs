@@ -1,6 +1,6 @@
-use std::cmp::Ordering;
-use crate::electron_shell::Shell;
 use crate::angular_momentum::AngularMomentum;
+use crate::electron_shell::Shell;
+use std::cmp::Ordering;
 use std::convert::TryFrom;
 
 /// Type that specifies an atomic orbital by its three quantum numbers and holds its energy
@@ -12,6 +12,48 @@ pub struct AtomicOrbital {
     pub energy: f64,
     pub exponents: Vec<f64>,
     pub coefficients: Vec<f64>,
+}
+
+impl AtomicOrbital {
+    pub fn create_1s() -> Self {
+        (1, 0, 0).into()
+    }
+
+    pub fn create_2s() -> Self {
+        (2, 0, 0).into()
+    }
+
+    pub fn create_2px() -> Self {
+        (2, 1, 1).into()
+    }
+
+    pub fn create_2py() -> Self {
+        (2, 1, -1).into()
+    }
+
+    pub fn create_2pz() -> Self {
+        (2, 1, 0).into()
+    }
+
+    pub fn create_3dxy() -> Self {
+        (3, 2, -2).into()
+    }
+
+    pub fn create_3dyz() -> Self {
+        (3, 2, -1).into()
+    }
+
+    pub fn create_3dz2() -> Self {
+        (3, 2, 0).into()
+    }
+
+    pub fn create_3dxz() -> Self {
+        (3, 2, 1).into()
+    }
+
+    pub fn create_3dx2y2() -> Self {
+        (3, 2, 2).into()
+    }
 }
 
 impl From<(i8, i8, i8)> for AtomicOrbital {
@@ -30,8 +72,8 @@ impl From<(i8, i8, i8)> for AtomicOrbital {
 impl From<((i8, i8, i8), f64)> for AtomicOrbital {
     fn from(numbers_energy: ((i8, i8, i8), f64)) -> Self {
         Self {
-            n: Shell::try_from(numbers_energy.0.0 as u8).unwrap(),
-            l: AngularMomentum::try_from(numbers_energy.0.1 as u8).unwrap(),
+            n: Shell::try_from(numbers_energy.0 .0 as u8).unwrap(),
+            l: AngularMomentum::try_from(numbers_energy.0 .1 as u8).unwrap(),
             m: numbers_energy.0 .2,
             energy: numbers_energy.1,
             exponents: Vec::new(),
