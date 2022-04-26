@@ -17,6 +17,13 @@ pub enum Element {
     Ac, Th, Pa, U,  Np, Pu, Am, Cm, Bk, Cf, Es, Fm, Md, No, Lr,
     Dummy,
 }
+
+impl Element {
+    pub const fn count() -> u8 {
+        119
+    }
+}
+
 // Two elements are considered to be the same if they have the same atomic number
 impl PartialEq for Element {
     fn eq(&self, other: &Self) -> bool {
